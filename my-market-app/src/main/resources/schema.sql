@@ -7,14 +7,15 @@ create table if not exists item
     price       integer
 );
 
+create table if not exists "cart_item"
+(
+    id            INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id      int references "order" (id),
+    item_id       int references item (id),
+    items_counter int
+);
+
 create table if not exists "order"
 (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
-);
-
-create table if not exists "order_item"
-(
-    order_id int references "order" (id),
-    item_id  int references item (id),
-    count    int
 );
