@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/.idea/queries/Query.sql" value="c6182beb-4d8c-467a-9736-bace2f3056c2" />
+    <file url="file://$PROJECT_DIR$/my-market-app/src/main/resources/schema.sql" value="c6182beb-4d8c-467a-9736-bace2f3056c2" />
+  </component>
+</project>
