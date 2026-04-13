@@ -5,17 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemTemplate {
-    private Long id;
-    private String title;
-    private String description;
-    private String imgPath;
-    private BigDecimal price;
-    private Long count;
+public class SlicedItems {
+    private List<ItemRowTemplate> items;
 }

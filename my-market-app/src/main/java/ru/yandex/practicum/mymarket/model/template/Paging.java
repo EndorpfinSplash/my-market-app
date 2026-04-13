@@ -5,17 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemTemplate {
-    private Long id;
-    private String title;
-    private String description;
-    private String imgPath;
-    private BigDecimal price;
-    private Long count;
+public class Paging {
+    private int pageSize;
+    private int pageNumber;
+    private Boolean hasPrevious;
+    private Boolean hasNext;
 }

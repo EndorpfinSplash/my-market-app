@@ -11,9 +11,12 @@ import ru.yandex.practicum.mymarket.mapper.ItemMapper;
 import ru.yandex.practicum.mymarket.model.Action;
 import ru.yandex.practicum.mymarket.model.CartItem;
 import ru.yandex.practicum.mymarket.model.Item;
+import ru.yandex.practicum.mymarket.model.ItemSortParameter;
 import ru.yandex.practicum.mymarket.model.template.ItemTemplate;
 import ru.yandex.practicum.mymarket.service.CartItemService;
+import ru.yandex.practicum.mymarket.service.ItemService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,7 +24,25 @@ import java.util.Optional;
 public class ItemController {
 
     CartItemService cartItemService;
+    ItemService itemService;
     ItemMapper itemMapper;
+
+    @GetMapping("/")
+    public ModelAndView getItems(@RequestParam(required = false) String search,
+                                 @RequestParam(value = "sort", defaultValue = "NO") ItemSortParameter itemSortParameter,
+                                 @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+                                 @RequestParam(name = "pageSize", defaultValue = "5") int pageSize
+    ) {
+        List<Item> items = itemService.findItemsPage(search,itemSortParameter, pageNumber, pageSize); // Загружаем товар с помощью сервиса
+
+        // Указываем название шаблона
+        ModelAndView modelAndView = new ModelAndView("items"); // classpath:/templates/users/page.html
+
+        // Передаём данные (model)
+        modelAndView.addObject("item", items);
+
+        return modelAndView;
+    }
 
     @GetMapping("/{id}")
     public ModelAndView getItem(@PathVariable Long id) {
