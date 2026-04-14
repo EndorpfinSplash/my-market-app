@@ -21,4 +21,5 @@ public class Item {
     private String description;
     private String imgPath;
     private BigDecimal price;
+    private Long count;
 }

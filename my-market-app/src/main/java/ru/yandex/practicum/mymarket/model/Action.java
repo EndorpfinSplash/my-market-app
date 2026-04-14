@@ -6,18 +6,16 @@ import lombok.Getter;
 public enum Action {
     MINUS {
         @Override
-        public CartItem execute(CartItem cartItem) {
-            cartItem.setItemsCounter(cartItem.getItemsCounter() - 1);
-            return cartItem;
+        public void execute(Item item) {
+            item.setCount(item.getCount() - 1);
         }
     },
     PLUS {
         @Override
-        public CartItem execute(CartItem cartItem) {
-            cartItem.setItemsCounter(cartItem.getItemsCounter() + 1);
-            return cartItem;
+        public void execute(Item cartItem) {
+            cartItem.setCount(cartItem.getCount() + 1);
         }
     };
 
-    public abstract CartItem execute(CartItem cartItem);
+    public abstract void execute(Item item);
 }

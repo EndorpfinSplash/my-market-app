@@ -3,13 +3,16 @@ package ru.yandex.practicum.mymarket.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.mymarket.model.Action;
 import ru.yandex.practicum.mymarket.model.Item;
 import ru.yandex.practicum.mymarket.model.ItemSortParameter;
+import ru.yandex.practicum.mymarket.model.SlicedEntitiesWithPaging;
 import ru.yandex.practicum.mymarket.model.template.Paging;
 import ru.yandex.practicum.mymarket.repository.ItemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,10 +21,10 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private static final int ROW_SIZE = 3;
 
-    public List<List<Item>> findItemsPage(String search,
-                                    ItemSortParameter itemSortParameter,
-                                    int pageNumber,
-                                    int pageSize) {
+    public SlicedEntitiesWithPaging findItemsPage(String search,
+                                          ItemSortParameter itemSortParameter,
+                                          int pageNumber,
+                                          int pageSize) {
         List<Item> searchedItems = findItems(search, itemSortParameter);
 
         int lastPage = (int) Math.ceil((double) searchedItems.size() / pageSize);
@@ -29,16 +32,20 @@ public class ItemService {
         int toIndex = Math.min(fromIndex + pageSize, searchedItems.size());
         List<Item> itemList = searchedItems.subList(fromIndex, toIndex);
 
-        List<List<Item>> slicedItems = getSlicedItems(itemList, ROW_SIZE);
+        List<List<Item>> slicedItems = getSlicedEntities(itemList, ROW_SIZE);
 
-
-        Paging.builder()
+        Paging paging = Paging.builder()
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
                 .hasPrevious(pageNumber > 1)
                 .hasNext(pageNumber < lastPage)
                 .build();
-        return slicedItems;
+
+        return SlicedEntitiesWithPaging.builder()
+                .slicedEntities(slicedItems)
+                .paging(paging)
+                .build();
+
     }
 
     private List<Item> findItems(String search,
@@ -63,8 +70,8 @@ public class ItemService {
         );
     }
 
-    private List<List<Item>> getSlicedItems(List<Item> itemList, int rowSize) {
-        List<List<Item>> slicedItems = new ArrayList<>();
+    private <T> List<List<T>> getSlicedEntities(List<T> itemList, int rowSize) {
+        List<List<T>> slicedItems = new ArrayList<>();
         if (itemList == null) {
             return slicedItems;
         }
@@ -80,4 +87,10 @@ public class ItemService {
         return slicedItems;
     }
 
+    public Item changeItemQuantity(Long itemId, Action action) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
+        Item item = itemOptional.orElseThrow(() -> new RuntimeException("Item not found"));
+        action.execute(item);
+        return itemRepository.save(item);
+    }
 }
