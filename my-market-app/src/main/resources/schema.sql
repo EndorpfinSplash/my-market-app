@@ -1,11 +1,11 @@
 create table if not exists item
 (
-    id           INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    title        varchar(256) not null,
-    description  varchar(256),
-    imgPath      varchar(256),
-    price        integer,
-    count int
+    id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title       varchar(256) not null,
+    description varchar(256),
+    imgPath     varchar(256),
+    price       integer,
+    count       int
 );
 
 create table if not exists "order"
@@ -15,9 +15,9 @@ create table if not exists "order"
 
 create table if not exists "cart_item"
 (
-    id            INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    order_id      int references "order" (id),
-    item_id       int references item (id),
-    item_counter int
+    id       INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id int references "order" (id),
+    item_id  int references item (id),
+    count    int
 );
 

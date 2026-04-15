@@ -88,9 +88,17 @@ public class ItemService {
     }
 
     public Item changeItemQuantity(Long itemId, Action action) {
-        Optional<Item> itemOptional = itemRepository.findById(itemId);
-        Item item = itemOptional.orElseThrow(() -> new RuntimeException("Item not found"));
+        Item item = getItem(itemId);
         action.execute(item);
         return itemRepository.save(item);
+    }
+
+    public Item getItem(Long itemId) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
+        return itemOptional.orElseThrow(() -> new RuntimeException("Item not found"));
+    }
+
+    public List<Item> getCartItems() {
+        return itemRepository.findAllByCountIsGreaterThan(0L);
     }
 }

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.mymarket.controller;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,14 +11,20 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.yandex.practicum.mymarket.model.Action;
 import ru.yandex.practicum.mymarket.model.Item;
 import ru.yandex.practicum.mymarket.model.ItemSortParameter;
+import ru.yandex.practicum.mymarket.model.Order;
 import ru.yandex.practicum.mymarket.model.SlicedEntitiesWithPaging;
 import ru.yandex.practicum.mymarket.service.ItemService;
+import ru.yandex.practicum.mymarket.service.OrderService;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 @RequestMapping
 public class ItemController {
 
     ItemService itemService;
+    OrderService orderService;
 
     @GetMapping(path = {"/items", "/"})
     public ModelAndView getItems(@RequestParam(required = false) String search,
@@ -37,14 +44,29 @@ public class ItemController {
         return modelAndView;
     }
 
+    @PostMapping(path = "/items")
+    public String getItems(@RequestParam(value = "id") Long itemId,
+                           @RequestParam(required = false) String search,
+                           @RequestParam(value = "sort", defaultValue = "NO") ItemSortParameter itemSortParameter,
+                           @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
+                           @RequestParam(name = "pageSize", defaultValue = "5") int pageSize,
+                           @RequestParam Action action
+    ) {
+        itemService.changeItemQuantity(itemId, action);
+        return String.format("redirect:/items?search=%s&sort=%s&pageNumber=%d&pageSize=%d",
+                search,
+                itemSortParameter,
+                pageNumber,
+                pageSize
+        );
+    }
+
     @GetMapping("/items/{id}")
-    public ModelAndView getItem(@PathVariable Long id) {
-        Item item = new Item(); // Загружаем товар с помощью сервиса
+    public ModelAndView getItem(@PathVariable(name = "id") Long itemId) {
+        Item item = itemService.getItem(itemId);
 
-        // Указываем название шаблона
-        ModelAndView modelAndView = new ModelAndView("item"); // classpath:/templates/users/page.html
+        ModelAndView modelAndView = new ModelAndView("item");
 
-        // Передаём данные (model)
         modelAndView.addObject("item", item);
 
         return modelAndView;
@@ -53,14 +75,51 @@ public class ItemController {
     @PostMapping("/items/{id}")
     public ModelAndView changeItemQuantity(@PathVariable(name = "id") Long itemId,
                                            @RequestParam Action action) {
-
         Item item = itemService.changeItemQuantity(itemId, action);
-        // Указываем название шаблона
-        ModelAndView modelAndView = new ModelAndView("item"); // classpath:/templates/users/page.html
 
-        // Передаём данные (model)
+        ModelAndView modelAndView = new ModelAndView("item");
+
         modelAndView.addObject("item", item);
 
         return modelAndView;
     }
+
+    @GetMapping("/cart/items")
+    public ModelAndView getCartItems() {
+        return getCartModelAndView();
+    }
+
+    @PostMapping("/cart/items")
+    public ModelAndView changeCartItemsQuantity(@RequestParam(name = "id") Long itemId,
+                                                @RequestParam Action action) {
+        itemService.changeItemQuantity(itemId, action);
+        return getCartModelAndView();
+    }
+
+    @GetMapping("/orders}")
+    public ModelAndView getOrders() {
+        List<Order> orders = orderService.findAll();
+
+        ModelAndView modelAndView = new ModelAndView("orders");
+
+        modelAndView.addObject("orders", orders);
+
+        return modelAndView;
+    }
+
+    @NonNull
+    private ModelAndView getCartModelAndView() {
+        List<Item> items = itemService.getCartItems();
+
+        ModelAndView modelAndView = new ModelAndView("cart");
+
+        modelAndView.addObject("items", items);
+        BigDecimal total = items.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getCount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        modelAndView.addObject("total", total);
+
+        return modelAndView;
+    }
+
 }

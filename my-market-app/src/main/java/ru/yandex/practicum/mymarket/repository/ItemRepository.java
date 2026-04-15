@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findAllByTitleContainsIgnoreCaseOrDescriptionContainingIgnoreCaseOrderBy(String title,
                                                                                         String description,
                                                                                         Sort sort);
+
+    List<Item> findAllByCountIsGreaterThan(Long itemsCount);
 }

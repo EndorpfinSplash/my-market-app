@@ -28,6 +28,6 @@ public class CartItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @Column(name = "item_counter")
-    private Long itemCounter;
+    @Column(name = "count")
+    private Long count;
 }
