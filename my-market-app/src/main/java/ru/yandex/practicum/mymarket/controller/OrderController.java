@@ -3,6 +3,7 @@ package ru.yandex.practicum.mymarket.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,8 +37,18 @@ public class OrderController {
         ModelAndView modelAndView = new ModelAndView("order");
 
         modelAndView.addObject("order", order);
+        modelAndView.addObject("newOrder", newOrder);
 
         return modelAndView;
+    }
+
+    @PostMapping("/by")
+    public String createOrder() {
+        Order order = orderService.createOrder();
+
+        return String.format("redirect:/orders/{%s}?newOrder=true",
+                order.getId()
+        );
     }
 
 }
