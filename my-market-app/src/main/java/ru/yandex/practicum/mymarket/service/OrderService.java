@@ -6,7 +6,6 @@ import ru.yandex.practicum.mymarket.model.Order;
 import ru.yandex.practicum.mymarket.repository.OrderRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -14,9 +13,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Optional<Order> findById(Long oderId) {
-
-        return orderRepository.findById(oderId);
+    public Order findById(Long oderId) {
+        return orderRepository.findById(oderId)
+                .orElseThrow(()->  new RuntimeException("Order not found"));
     }
 
     public List<Order> findAll() {

@@ -23,4 +23,6 @@ public class Order {
     @OneToMany
     @JoinColumn(name = "order_id")
     private List<CartItem> items;
+
+    private long totalPrice;
 }

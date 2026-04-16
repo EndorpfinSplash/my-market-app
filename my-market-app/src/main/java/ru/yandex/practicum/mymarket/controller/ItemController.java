@@ -16,7 +16,6 @@ import ru.yandex.practicum.mymarket.model.SlicedEntitiesWithPaging;
 import ru.yandex.practicum.mymarket.service.ItemService;
 import ru.yandex.practicum.mymarket.service.OrderService;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -114,9 +113,9 @@ public class ItemController {
         ModelAndView modelAndView = new ModelAndView("cart");
 
         modelAndView.addObject("items", items);
-        BigDecimal total = items.stream()
-                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getCount())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Long total = items.stream()
+                .map(item -> item.getPrice()*item.getCount())
+                .reduce(0L, Long::sum);
         modelAndView.addObject("total", total);
 
         return modelAndView;

@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @Data
 @Builder
@@ -20,6 +18,6 @@ public class Item {
     private String title;
     private String description;
     private String imgPath;
-    private BigDecimal price;
+    private Long price;
     private Long count;
 }

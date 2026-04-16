@@ -10,7 +10,8 @@ create table if not exists item
 
 create table if not exists "order"
 (
-    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    totalPrice int
 );
 
 create table if not exists "cart_item"
