@@ -39,6 +39,8 @@ public class OrderService {
                 .reduce(0L, Long::sum);
         newOrder.setItems(cartItems);
         newOrder.setTotalPrice(totalCartSum);
+        itemsList.forEach(item -> item.setCount(0L));
+        itemRepository.saveAll(itemsList);
         return orderRepository.save(newOrder);
     }
 }
