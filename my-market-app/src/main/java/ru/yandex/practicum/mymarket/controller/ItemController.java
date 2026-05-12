@@ -11,10 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.yandex.practicum.mymarket.model.Action;
 import ru.yandex.practicum.mymarket.model.Item;
 import ru.yandex.practicum.mymarket.model.ItemSortParameter;
-import ru.yandex.practicum.mymarket.model.Order;
 import ru.yandex.practicum.mymarket.model.SlicedEntitiesWithPaging;
 import ru.yandex.practicum.mymarket.service.ItemService;
-import ru.yandex.practicum.mymarket.service.OrderService;
 
 import java.util.List;
 
@@ -23,7 +21,6 @@ import java.util.List;
 public class ItemController {
 
     ItemService itemService;
-    OrderService orderService;
 
     @GetMapping(path = {"/items", "/"})
     public ModelAndView getItems(@RequestParam(required = false) String search,
@@ -93,17 +90,6 @@ public class ItemController {
                                                 @RequestParam Action action) {
         itemService.changeItemQuantity(itemId, action);
         return getCartModelAndView();
-    }
-
-    @GetMapping("/orders}")
-    public ModelAndView getOrders() {
-        List<Order> orders = orderService.findAll();
-
-        ModelAndView modelAndView = new ModelAndView("orders");
-
-        modelAndView.addObject("orders", orders);
-
-        return modelAndView;
     }
 
     @NonNull

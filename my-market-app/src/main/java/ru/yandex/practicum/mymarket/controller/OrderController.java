@@ -18,7 +18,7 @@ public class OrderController {
 
     OrderService orderService;
 
-    @GetMapping("/orders}")
+    @GetMapping("/orders")
     public ModelAndView getOrders() {
         List<Order> orders = orderService.findAll();
 

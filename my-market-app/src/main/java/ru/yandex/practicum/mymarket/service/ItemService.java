@@ -56,14 +56,14 @@ public class ItemService {
         }
 
         if ((search == null || search.isEmpty())) {
-            return itemRepository.findAllByOrderBy(Sort.by(itemSortParameter.getFieldName()));
+            return itemRepository.findAllOrderBy(Sort.by(itemSortParameter.getFieldName()));
         }
 
         if (itemSortParameter.equals(ItemSortParameter.NO)) {
-            return itemRepository.findAllByTitleContainsIgnoreCaseOrDescriptionContainingIgnoreCase(search, search);
+            return itemRepository.findAllByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(search, search);
         }
 
-        return itemRepository.findAllByTitleContainsIgnoreCaseOrDescriptionContainingIgnoreCaseOrderBy(
+        return itemRepository.findAllByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(
                 search,
                 search,
                 Sort.by(itemSortParameter.getFieldName())

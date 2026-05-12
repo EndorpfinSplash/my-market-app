@@ -9,14 +9,15 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    List<Item> findAllByOrderBy(Sort sort);
 
-    List<Item> findAllByTitleContainsIgnoreCaseOrDescriptionContainingIgnoreCase(String title,
-                                                                                 String description);
+    List<Item> findAllOrderBy(Sort sort);
 
-    List<Item> findAllByTitleContainsIgnoreCaseOrDescriptionContainingIgnoreCaseOrderBy(String title,
-                                                                                        String description,
-                                                                                        Sort sort);
+    List<Item> findAllByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(String title,
+                                                                               String description);
+
+    List<Item> findAllByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(String title,
+                                                                               String description,
+                                                                               Sort sort);
 
     List<Item> findAllByCountIsGreaterThan(Long itemsCount);
 }
